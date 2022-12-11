@@ -1,0 +1,10 @@
+#add-accounts-view,
+#edit-delete-view,
+#edit-account-view {
+  display: none;
+}
+
+.navbar-nav .nav-link.active {
+  background-color: tomato;
+  border-radius: 8px;
+}
