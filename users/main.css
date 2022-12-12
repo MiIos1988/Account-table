@@ -8,3 +8,11 @@
   background-color: tomato;
   border-radius: 8px;
 }
+
+.msg {
+  color: red;
+}
+
+.msgEdit {
+  color: red;
+}

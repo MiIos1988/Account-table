@@ -153,7 +153,10 @@ let accountsView = document.getElementById("accounts-view");
 let accountsViewTBody = accountsView.querySelector("tbody");
 let addAccountsView = document.getElementById("add-accounts-view");
 let editDeleteView = document.getElementById("edit-delete-view");
+let editAccountView = document.getElementById("edit-account-view");
 let editDeleteViewTBody = editDeleteView.querySelector("tbody");
+const msg = addAccountsView.querySelector(".msg")
+const msgEdit = editAccountView.querySelector(".msgEdit")
 let addAccountsViewInputs = addAccountsView.querySelectorAll(
   ".addAccountsViewInputs input"
 );
@@ -161,12 +164,12 @@ let editAccountsViewInputs = document.querySelectorAll(
   ".editAccountsViewInputs input"
 );
 // const form = document.querySelector("#form")
-let id;
+let idData;
 
 const saveAddAccount = document.getElementById("saveBtn");
 const editAccountBtn = document.getElementById("editBtn");
-
-const allView = [accountsView, addAccountsView, editDeleteView];
+let newArrow = []
+const allView = [accountsView, addAccountsView, editDeleteView, editAccountView];
 
 // listener
 navbarLinks.forEach((link) => {
@@ -180,19 +183,35 @@ function addAccount() {
   addAccountsViewInputs.forEach((input) => {
     newUser[input.name] = input.value;
   });
-  database.push(newUser);
-  createTable();
-  clearInputs();
-  displayView("accounts-view");
+  const find = database.findIndex(e => e.id === newUser.id)
+  if (find === -1) {
+    database.push(newUser);
+    createTable();
+    clearInputs();
+    displayView("accounts-view");
+    msg.innerText = ""
+  } else {
+    msg.innerText = "Id already exists"
+  }
+
 }
 function editAccount() {
   let editUser = {};
   editAccountsViewInputs.forEach((input) => {
     editUser[input.name] = input.value;
   });
-  database.splice(id, 1, editUser);
-  createTable();
-  displayView("accounts-view");
+
+  const find = newArrow.findIndex(e => e.id === editUser.id)
+  console.log(find)
+  if (find === -1) {
+    let index = database.findIndex(e => e.id === idData)
+    database.splice(index, 1, editUser)
+    createTable();
+    displayView("accounts-view");
+    msgEdit.innerText = ""
+  } else {
+    msgEdit.innerText = "Id already exists"
+  }
 }
 
 function clearInputs() {
@@ -275,7 +294,7 @@ function deleteAccount(id) {
 }
 function editAccountField(id) {
   // id = this.id;
-  console.log(database);
+  idData = id
   let currentUser = database.find((e) => e.id === id);
   const fields = Object.keys(currentUser);
   // editAccountsViewInputs[0].value = currentUser.id;
@@ -289,7 +308,9 @@ function editAccountField(id) {
   for (const field of fields) {
     const inputField = document.getElementsByName(field)[1];
     inputField.value = currentUser[field];
-    console.log(inputField);
   }
   displayView("edit-account-view");
+  newArrow = database.filter(e => {
+    return e.id !== id
+  })
 }
